@@ -8,6 +8,7 @@ import Restaurante from './Restaurante';
 const ListaRestaurantes = () => {
   const [restaurantes, setRestaurantes] = useState<IRestaurante[]>();
   const [nextPage, setNextPage] = useState('');
+  const [prevPage, setPrevtPage] = useState('');
   useEffect(() => {
     axios
       .get<IPaginacao<IRestaurante>>(
@@ -16,14 +17,16 @@ const ListaRestaurantes = () => {
       .then((response) => {
         setRestaurantes(response.data.results);
         setNextPage(response.data.next);
+        setPrevtPage(response.data.previous);
       })
       .catch((err) => console.log(err));
   }, []);
 
-  const verMais = () => {
-    axios.get<IPaginacao<IRestaurante>>(nextPage).then((response) => {
-      setRestaurantes(restaurantes?.concat(response.data.results));
+  const carregarDados = (url: string) => {
+    axios.get<IPaginacao<IRestaurante>>(url).then((response) => {
+      setRestaurantes(response.data.results);
       setNextPage(response.data.next);
+      setPrevtPage(response.data.previous);
     });
   };
 
@@ -35,7 +38,14 @@ const ListaRestaurantes = () => {
       {restaurantes?.map((item) => (
         <Restaurante restaurante={item} key={item.id} />
       ))}
-      {nextPage && <button onClick={verMais}>Ver mais</button>}
+
+      <button onClick={(e) => carregarDados(prevPage)} disabled={!prevPage}>
+        Página anterior
+      </button>
+
+      <button onClick={(e) => carregarDados(nextPage)} disabled={!nextPage}>
+        Próxima página
+      </button>
     </section>
   );
 };
