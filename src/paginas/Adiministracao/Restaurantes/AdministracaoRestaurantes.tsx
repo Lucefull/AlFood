@@ -1,24 +1,24 @@
 import { Button, TableContainer, TableHead } from '@mui/material';
 import { Table, TableBody, TableCell, TableRow } from '@mui/material';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import http from '../../../http';
 import IRestaurante from '../../../interfaces/IRestaurante';
 
 const AdministracaoRestaurantes = () => {
   const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([]);
 
   useEffect(() => {
-    axios
-      .get<IRestaurante[]>('http://localhost:8000/api/v2/restaurantes/')
+    http
+      .get<IRestaurante[]>('restaurantes/')
       .then((res) => {
         setRestaurantes(res.data);
       });
   }, []);
 
   const excluir = (excluido: IRestaurante) => {
-    axios
-      .delete(`http://localhost:8000/api/v2/restaurantes/${excluido.id}/`)
+    http
+      .delete(`restaurantes/${excluido.id}/`)
       .then(() => {
         const listRestaurant = restaurantes.filter((e) => e.id !== excluido.id);
         setRestaurantes(listRestaurant);

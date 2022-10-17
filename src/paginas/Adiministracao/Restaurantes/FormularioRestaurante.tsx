@@ -1,7 +1,7 @@
-import { Button, TextField } from '@mui/material';
-import axios from 'axios';
+import { Button, TextField, Typography, Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import http from '../../../http';
 import IRestaurante from '../../../interfaces/IRestaurante';
 
 const FormularioRestaurante = () => {
@@ -9,9 +9,9 @@ const FormularioRestaurante = () => {
 
   useEffect(() => {
     if (parametros.id) {
-      axios
+      http
         .get<IRestaurante>(
-          `http://localhost:8000/api/v2/restaurantes/${parametros.id}/`
+          `restaurantes/${parametros.id}/`
         )
         .then((res) => {
           setNomeRestaurante(res.data.nome);
@@ -24,8 +24,8 @@ const FormularioRestaurante = () => {
     e.preventDefault();
 
     if (parametros.id) {
-      axios
-        .put(`http://localhost:8000/api/v2/restaurantes/${parametros.id}/`, {
+      http
+        .put(`restaurantes/${parametros.id}/`, {
           nome: nomeRestaurante,
         })
         .then(() => {
@@ -33,8 +33,8 @@ const FormularioRestaurante = () => {
         })
         .catch((err) => console.log(err));
     } else {
-      axios
-        .post('http://localhost:8000/api/v2/restaurantes/', {
+      http
+        .post('restaurantes/', {
           nome: nomeRestaurante,
         })
         .then(() => {
@@ -44,21 +44,30 @@ const FormularioRestaurante = () => {
   };
 
   return (
-    <form
-      onSubmit={(e) => {
-        aoSubmitForm(e);
-      }}>
-      <TextField
-        value={nomeRestaurante}
-        onChange={(e) => setNomeRestaurante(e.target.value)}
-        label="Nome do restaurante"
-        variant="standard"
-      />
+    <Box
+      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Typography component="h1" variant="h6">
+        Fromulario Restaurantes
+      </Typography>
+      <Box component="form" onSubmit={aoSubmitForm}>
+        <TextField
+          value={nomeRestaurante}
+          onChange={(e) => setNomeRestaurante(e.target.value)}
+          label="Nome do restaurante"
+          variant="standard"
+          fullWidth
+          required
+        />
 
-      <Button type="submit" variant="outlined">
-        Salvar
-      </Button>
-    </form>
+        <Button
+          sx={{ marginTop: 1 }}
+          type="submit"
+          fullWidth
+          variant="outlined">
+          Salvar
+        </Button>
+      </Box>
+    </Box>
   );
 };
 export default FormularioRestaurante;
