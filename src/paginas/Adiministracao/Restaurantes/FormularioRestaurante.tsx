@@ -56,7 +56,7 @@ const FormularioRestaurante = () => {
         flexGrow: 1,
       }}>
       <Typography component="h1" variant="h6">
-        Fromulario Restaurantes
+        Fromulario de Restaurantes
       </Typography>
       <Box component="form" sx={{ width: '100%' }} onSubmit={aoSubmitForm}>
         <TextField
